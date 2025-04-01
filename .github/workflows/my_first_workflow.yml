@@ -1,24 +1,29 @@
-name: First Workflow
+name: Test AWS Credentials
 
 on:
-  push:
-    branches: 
-      - main
-  workflow_dispatch:
-jobs:
-  MyFirstJob:
-    runs-on: ubuntu-latest
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ AWS_SECRET_ACCESS_KEY }}
-      AWS_SESSION_TOKEN: ${{ AWS_SESSION_TOKEN }}
-    steps:
-      - run: echo "Hello World!"
-      - name: Checkout
-        uses: actions/checkout@v4.2.2
-      - name: List files in repository
-        run: |
-          echo "Trying to use AWS CLI"
-          aws ec2 describe-instances --region us-east-1
+  workflow_dispatch:  # Allows you to manually trigger this workflow
 
-          
+jobs:
+  test-aws-cli:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Configure AWS credentials
+      run: |
+        mkdir -p ~/.aws
+        echo "[default]" > ~/.aws/credentials
+        echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+        echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+        echo "aws_session_token = ${{ secrets.AWS_SESSION_TOKEN }}" >> ~/.aws/credentials
+        echo "[default]" > ~/.aws/config
+        echo "region = ${{ secrets.AWS_REGION || 'us-east-1' }}" >> ~/.aws/config
+
+    - name: Install AWS CLI (v2)
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+        aws --version
+
+    - name: Run AWS CLI command
+      run: aws ec2 describe-instances
