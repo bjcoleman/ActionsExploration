@@ -1,0 +1,18 @@
+name: Deploy on AWS
+
+on: 
+  workflow_dispatch:  # this has to be triggered manually
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Make SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.LABSUSERPEM }} > ~/.aws/labsuser.pem
+    - name: Deploy
+      run: |
+        ssh -i .ssh/labsuser.pem ec2-user@54.211.6.228 "cd /ActionsExploration && ./redeploy.sh"
+    
+    
