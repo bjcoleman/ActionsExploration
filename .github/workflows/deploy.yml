@@ -10,6 +10,7 @@ jobs:
     - name: Make SSH Key
       run: |
         echo "${{ secrets.LABSUSERPEM }}" > labsuser.pem
+        chmod 600 labsuser.pem
     - name: Deploy
       run: |
         ssh -i labsuser.pem ec2-user@54.211.6.228 "cd /ActionsExploration && ./redeploy.sh"
