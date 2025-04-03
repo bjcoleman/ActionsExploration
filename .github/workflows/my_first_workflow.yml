@@ -20,3 +20,17 @@ jobs:
         echo "region = ${{ secrets.AWS_REGION || 'us-east-1' }}" >> ~/.aws/config
     - name: Run AWS CLI command
       run: aws ec2 describe-instances
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+        cache: 'pip'
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    - name: Run Tests
+      run: pytest
+
+
