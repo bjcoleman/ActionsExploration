@@ -1,6 +1,7 @@
 name: Test AWS Credentials
 
 on:
+  push:
   workflow_dispatch:  # Allows you to manually trigger this workflow
 
 jobs:
@@ -15,16 +16,21 @@ jobs:
         echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
         echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
         echo "aws_session_token = ${{ secrets.AWS_SESSION_TOKEN }}" >> ~/.aws/credentials
-        KEY=${{ secrets.AWS_ACCESS_KEY_ID }}
-        ACCESS=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        TOKEN=${{ secrets.AWS_SESSION_TOKEN }}
-
         echo "[default]" > ~/.aws/config
         echo "region = ${{ secrets.AWS_REGION || 'us-east-1' }}" >> ~/.aws/config
-
-        echo $KEY
-        echo $ACCESS
-        echo $TOKEN
-
     - name: Run AWS CLI command
       run: aws ec2 describe-instances
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+        cache: 'pip'
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    - name: Run Tests
+      run: pytest
+
+
