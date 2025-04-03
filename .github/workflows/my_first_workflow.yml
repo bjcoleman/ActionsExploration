@@ -1,6 +1,7 @@
 name: Test AWS Credentials
 
 on:
+  push:
   workflow_dispatch:  # Allows you to manually trigger this workflow
 
 jobs:
