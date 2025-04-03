@@ -15,16 +15,7 @@ jobs:
         echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
         echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
         echo "aws_session_token = ${{ secrets.AWS_SESSION_TOKEN }}" >> ~/.aws/credentials
-        KEY=${{ secrets.AWS_ACCESS_KEY_ID }}
-        ACCESS=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        TOKEN=${{ secrets.AWS_SESSION_TOKEN }}
-
         echo "[default]" > ~/.aws/config
         echo "region = ${{ secrets.AWS_REGION || 'us-east-1' }}" >> ~/.aws/config
-
-        echo $KEY
-        echo $ACCESS
-        echo $TOKEN
-
     - name: Run AWS CLI command
       run: aws ec2 describe-instances
