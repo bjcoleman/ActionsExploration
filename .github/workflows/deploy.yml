@@ -9,10 +9,9 @@ jobs:
     steps:
     - name: Make SSH Key
       run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.LABSUSERPEM }}" > ~/.aws/labsuser.pem
+        echo "${{ secrets.LABSUSERPEM }}" > labsuser.pem
     - name: Deploy
       run: |
-        ssh -i .ssh/labsuser.pem ec2-user@54.211.6.228 "cd /ActionsExploration && ./redeploy.sh"
+        ssh -i labsuser.pem ec2-user@54.211.6.228 "cd /ActionsExploration && ./redeploy.sh"
     
     
