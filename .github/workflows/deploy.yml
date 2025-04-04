@@ -7,12 +7,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Make SSH Key
-      run: |
-        echo "${{ secrets.LABSUSERPEM }}" > labsuser.pem
-        chmod 600 labsuser.pem
-    - name: Deploy
-      run: |
-        ssh -i labsuser.pem ec2-user@54.211.6.228 "cd /ActionsExploration && ./redeploy.sh"
-    
-    
+      - name: ssh-pipeline
+        uses: cross-the-world/ssh-pipeline@v1.2.0
+        with:
+          host: 18.207.206.42
+          user: ec2-user
+          key: ${{ secrets.LABSUSERPEM }}
+          script: 
+            cd /ActionsExploration
+            ./redeploy.sh
